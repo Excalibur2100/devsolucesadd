@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier - Dev Soluces{% endblock %}
+
+{% block content %}
+        <h1>Mon panier</h1>
+    Retrouver l'ensemble des prodits que vous avez ajouter à votre panier.
+    {{dump(cart)}}
+    <div class="text-center">
+      <a href="{{ path('app_products') }} "class="btn btn-primary mt-3">Retour à la boutique</a>
+    </div>
+
+    <table class="table mt-3 table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Produit</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Quantité</th>
+            <th scope="col">Prix</th>
+            <th scope="col">Total</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+            {% set total = null %}
+         {% for  product in cart %}
+          <tr>
+            <th>
+                <img src="/uploads/{{ product.product.illustration }}" alt="{{ product.product.name }}" height="95px"><br/>
+            </th>
+            <td> 
+                {{ product.product.name }}<br/>
+                <small>{{ product.product.subtitle }}</small>
+            </td>
+            <td>x {{product.quantity}}</td>
+            <td>{{ (product.product.price / 100)|number_format(2, ',','.' ) }} €</td>
+            <td>{{ ((product.product.price * product.quantity) / 100)|number_format(2, ',','.' ) }} €</td>
+            <td>
+              <a href="{{ path('app_delete_my_cart', { 'id' : product.product.id}) }}">
+              <img src="{{ asset('assets/img/delete.png') }}" height="18px" alt="Supprimer mon produit"</td>
+            </a>
+          </tr>
+            {% set total = total + (product.product.price * product.quantity) %}
+        {% endfor %} 
+        </tbody>
+      </table>
+      <div class="text-left mb-5">
+
+      </div>
+      <div class="text-right mb-5">
+
+            <b>Nombre de produit : </b>{{ cart |length }}<br/>
+            <b>Total de mon panier : </b> {{ (total / 100)|number_format(2, ',','.' ) }} €
+            <a href="" class="btn btn-success btn-block mt-3">Valider mon panier</a>
+      </div>
+
+{% endblock %}
